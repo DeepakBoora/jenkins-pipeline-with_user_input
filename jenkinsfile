@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+    
+    parameters{
+                string(name:"person", defaultValue:"Ram")
+                booleanParam(name:"isMale", defaultValue:true)
+            }
+
+    stages {
+        stage('Build') {
+            steps {
+                echo 'Build The Pipeline'
+            }
+        }
+        stage('Test') {
+            
+            input{
+                message "Should we continue"
+                ok "Yes we should"
+            }
+            steps {
+                echo 'Test the Pipeline'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                echo 'Deployy the Pipeline'
+                sh ' echo "${person}"'
+            }
+        }
+    }
+    
+    post {
+        
+        always {
+        echo "Always deploy this Pipeline if above aborted also.."
+        }
+        
+        failure {
+            echo "The above Pipeline is aborted."
+        }
+        
+        success {
+            echo "This Pipeline is successfully deployed."
+        }
+    }
+}
